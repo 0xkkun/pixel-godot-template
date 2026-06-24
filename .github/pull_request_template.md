@@ -4,6 +4,15 @@ Closes:
 
 P0/P1/P2:
 
+Title prefix: `[UI]`, `[Docs]`, `[Harness]`, `[CI]`, `[Scene]`, `[Autoload]`, `[Interaction]`, `[Assets]`, or `[Config]`
+
+Metadata:
+
+- [ ] Assignee set
+- [ ] Milestone set
+- [ ] Priority label set
+- [ ] Area label set
+
 ## Verification
 
 - [ ] `bash scripts/verify_quick.sh`
