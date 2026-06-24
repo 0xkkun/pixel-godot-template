@@ -1,6 +1,30 @@
 # Customizing The Template
 
-Use this guide for the first 30 minutes after creating a project from the template.
+Use this guide for the first hour after creating a project from the template.
+
+## 0. Create Your Project
+
+Prefer GitHub's **Use this template** flow so the new repository starts with its own
+remote. With GitHub CLI:
+
+```sh
+gh repo create my-game --template 0xkkun/pixel-godot-template --private --clone
+cd my-game
+```
+
+Use `--public` instead of `--private` when the new project should be public.
+
+If you clone the template directly, replace `origin` before your first push:
+
+```sh
+git remote set-url origin https://github.com/YOUR_ORG_OR_USER/my-game.git
+```
+
+Run the untouched baseline once:
+
+```sh
+bash scripts/verify_quick.sh
+```
 
 ## 1. Rename
 
@@ -12,7 +36,25 @@ Update:
 - README title and repository links
 - export paths in `export_presets.cfg`
 
+`config/app.cfg` is intentionally ignored by git. Keep real local identifiers or
+service toggles there, and keep `config/app.cfg.example` as the committed example.
+
 Run `bash scripts/verify_quick.sh` after renaming project settings.
+
+## First-Hour Checklist
+
+- Create a new repository from the template and confirm `git remote get-url origin`
+  points at your repository.
+- Run `bash scripts/verify_quick.sh` before changing anything.
+- Rename `config/name`, `config/version`, README title, local `config/app.cfg`, and
+  export paths.
+- Run `bash scripts/verify_full.sh` after the rename.
+- Replace one sample actor or interactable with your first real vertical slice.
+- Extend the closest unit, integration, or functional test for that replacement.
+- Update `AGENTS.md` so coding agents know which parts of your copied project must
+  remain generic and which parts can use your real project vocabulary.
+- Use `docs/pr-hygiene.md` to keep PR titles, labels, assignees, and milestones
+  consistent from the first change.
 
 ## 2. Replace
 
