@@ -36,3 +36,14 @@ Full verification adds:
 - `tests/support/test_runner.gd`
 
 Every `test_*` method must execute at least one assertion.
+
+## Branch Protection
+
+Recommended `main` protection:
+
+- require pull requests before merging
+- require the `Quick verification` status check
+- require branches to be up to date before merging
+- allow administrators to bypass only for repository recovery
+
+Enable protection after the first green CI run confirms the workflow name and status check label.
