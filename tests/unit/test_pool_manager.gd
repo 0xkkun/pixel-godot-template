@@ -50,3 +50,21 @@ func test_default_parent_is_scoped_to_pool_id() -> void:
 
 	first_parent.queue_free()
 	second_parent.queue_free()
+
+
+func test_double_release_does_not_duplicate_available_instance() -> void:
+	var scene := load("res://scenes/interactables/sample_pooled_marker.tscn") as PackedScene
+	PoolManager.register_scene(&"sample_marker", scene, 0, self)
+
+	var first := PoolManager.acquire(&"sample_marker", self)
+	PoolManager.release(first)
+	PoolManager.release(first)
+
+	_runner.assert_eq(PoolManager.get_available_count(&"sample_marker"), 1)
+
+	var second := PoolManager.acquire(&"sample_marker", self)
+	var third := PoolManager.acquire(&"sample_marker", self)
+
+	_runner.assert_true(first == second, "first available instance is reused")
+	_runner.assert_true(third != second, "second acquire creates a different active instance")
+	_runner.assert_eq(PoolManager.get_active_count(&"sample_marker"), 2)

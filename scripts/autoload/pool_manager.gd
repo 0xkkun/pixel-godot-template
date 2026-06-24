@@ -53,8 +53,11 @@ func release(node: Node) -> void:
 	if pool_id == &"":
 		push_error("Node was not acquired from a pool: %s" % node.name)
 		return
+	var active_nodes: Array = _active.get(pool_id, [])
+	if not active_nodes.has(node):
+		return
 	_deactivate(node)
-	_active.get_or_add(pool_id, []).erase(node)
+	active_nodes.erase(node)
 	_available.get_or_add(pool_id, []).append(node)
 
 
