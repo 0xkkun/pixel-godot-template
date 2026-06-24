@@ -5,7 +5,7 @@ const TemplateGroups = preload("res://scripts/constants/template_groups.gd")
 var _pool_scenes: Dictionary = {}
 var _available: Dictionary = {}
 var _active: Dictionary = {}
-var _default_parent: Node = null
+var _default_parents: Dictionary = {}
 
 
 func register_scene(
@@ -17,7 +17,7 @@ func register_scene(
 	if not _active.has(pool_id):
 		_active[pool_id] = []
 	if parent != null:
-		_default_parent = parent
+		_default_parents[pool_id] = parent
 	for _i in range(warm_count):
 		var node := _instantiate(pool_id)
 		_deactivate(node)
@@ -35,7 +35,7 @@ func acquire(pool_id: StringName, parent: Node = null) -> Node:
 	else:
 		node = _available[pool_id].pop_back()
 
-	var target_parent := parent if parent != null else _default_parent
+	var target_parent: Node = parent if parent != null else _default_parents.get(pool_id, null)
 	if target_parent != null and node.get_parent() != target_parent:
 		if node.get_parent() != null:
 			node.get_parent().remove_child(node)
@@ -85,7 +85,7 @@ func clear_all() -> void:
 	_pool_scenes.clear()
 	_available.clear()
 	_active.clear()
-	_default_parent = null
+	_default_parents.clear()
 
 
 func _instantiate(pool_id: StringName) -> Node:

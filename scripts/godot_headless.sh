@@ -6,8 +6,10 @@ cd "$ROOT"
 
 GODOT="${GODOT_BIN:-godot}"
 PYTHON="${PYTHON_BIN:-python3}"
+GODOT_USER_HOME="${GODOT_USER_HOME:-$ROOT/test-results/godot-user-home}"
 LOG_DIR="${GODOT_HEADLESS_LOG_DIR:-test-results/godot-headless}"
 mkdir -p "$LOG_DIR"
+mkdir -p "$GODOT_USER_HOME"
 
 if ! command -v "$GODOT" >/dev/null 2>&1; then
   echo "[godot_headless] FAIL: Godot executable not found: $GODOT" >&2
@@ -19,7 +21,8 @@ stamp="$(date +%Y%m%dT%H%M%S)"
 log_file="$LOG_DIR/godot-${stamp}-$$.log"
 
 set +e
-"$GODOT" --headless --path "$ROOT" --log-file "$log_file" "$@" 2>&1 | tee -a "$log_file"
+HOME="$GODOT_USER_HOME" XDG_DATA_HOME="$GODOT_USER_HOME/.local/share" \
+  "$GODOT" --headless --path "$ROOT" --log-file "$log_file" "$@" 2>&1 | tee -a "$log_file"
 status="${PIPESTATUS[0]}"
 set -e
 

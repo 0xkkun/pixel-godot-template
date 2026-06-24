@@ -7,6 +7,7 @@ cd "$ROOT"
 GODOT="${GODOT_BIN:-godot}"
 EXPECTED_GODOT_VERSION="4.6.3.stable.official.7d41c59c4"
 PYTHON="${PYTHON_BIN:-python3}"
+GODOT_USER_HOME="${GODOT_USER_HOME:-$ROOT/test-results/godot-user-home}"
 
 fail() {
   echo "[verify_quick] FAIL: $1" >&2
@@ -45,7 +46,9 @@ echo "== static contract =="
 
 echo "== editor load =="
 mkdir -p test-results
-"$GODOT" --headless --editor --quit --path "$ROOT" > test-results/editor-load.log 2>&1
+mkdir -p "$GODOT_USER_HOME"
+HOME="$GODOT_USER_HOME" XDG_DATA_HOME="$GODOT_USER_HOME/.local/share" \
+  "$GODOT" --headless --editor --quit --path "$ROOT" > test-results/editor-load.log 2>&1
 "$PYTHON" scripts/verify_godot_output.py test-results/editor-load.log
 "$PYTHON" scripts/verify_import_metadata.py
 ok "headless editor load"

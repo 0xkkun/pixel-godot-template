@@ -13,6 +13,7 @@ signal finish_requested
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	pause_button.set_meta("uat_action", "session.pause")
 	resume_button.set_meta("uat_action", "session.resume")
 	finish_button.set_meta("uat_action", "session.finish")

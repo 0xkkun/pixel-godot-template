@@ -23,6 +23,15 @@ You can also set `PYTHON_BIN` if `python3` points to an older interpreter:
 PYTHON_BIN=python3.12 bash scripts/verify_quick.sh
 ```
 
+The Godot verification commands use a repo-local user home under `test-results/godot-user-home`
+by default. This keeps headless editor settings and logs out of your real home directory and
+makes sandboxed agent runs reproducible. Override it only when you intentionally want a shared
+Godot user profile:
+
+```sh
+GODOT_USER_HOME=/tmp/pixel-godot-user bash scripts/verify_quick.sh
+```
+
 ## Optional
 
 - Godot MCP for editor and runtime checks from an AI coding agent

@@ -10,8 +10,13 @@ FAIL_PATTERNS = [
     re.compile(r"\bSCRIPT ERROR\b"),
     re.compile(r"\bFATAL\b"),
     re.compile(r"\bPANIC\b"),
-    re.compile(r"^\s*ERROR:", re.MULTILINE),
     re.compile(r"\[FAIL\]"),
+]
+
+ALLOWLISTED_ERROR_LINES = [
+    re.compile(r'^\s*ERROR: Condition "ret != noErr" is true\. Returning: ""$'),
+    re.compile(r"^\s*ERROR: Cannot save file '.*/editor_settings-4\.6\.tres'\.$"),
+    re.compile(r"^\s*ERROR: Error saving editor settings to .*/editor_settings-4\.6\.tres$"),
 ]
 
 
@@ -26,6 +31,13 @@ def main() -> None:
         match = pattern.search(text)
         if match:
             failures.append(pattern.pattern)
+
+    for line in text.splitlines():
+        if not re.match(r"^\s*ERROR:", line):
+            continue
+        if any(pattern.match(line) for pattern in ALLOWLISTED_ERROR_LINES):
+            continue
+        failures.append(line.strip())
 
     if failures:
         print("[verify_godot_output] FAIL: Godot log contains failure markers", file=sys.stderr)

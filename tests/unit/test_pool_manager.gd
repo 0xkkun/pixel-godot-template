@@ -30,3 +30,23 @@ func test_acquire_release_reuses_instance() -> void:
 	var second := PoolManager.acquire(&"sample_marker", self)
 	_runner.assert_true(first == second, "pool reuses released instance")
 	_runner.assert_eq(second.get_meta("pool_id"), &"sample_marker")
+
+
+func test_default_parent_is_scoped_to_pool_id() -> void:
+	var scene := load("res://scenes/interactables/sample_pooled_marker.tscn") as PackedScene
+	var first_parent := Node2D.new()
+	var second_parent := Node2D.new()
+	add_child(first_parent)
+	add_child(second_parent)
+
+	PoolManager.register_scene(&"first_marker", scene, 0, first_parent)
+	PoolManager.register_scene(&"second_marker", scene, 0, second_parent)
+
+	var first_marker := PoolManager.acquire(&"first_marker")
+	var second_marker := PoolManager.acquire(&"second_marker")
+
+	_runner.assert_eq(first_marker.get_parent(), first_parent)
+	_runner.assert_eq(second_marker.get_parent(), second_parent)
+
+	first_parent.queue_free()
+	second_parent.queue_free()
